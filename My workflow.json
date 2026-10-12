@@ -1,0 +1,142 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "owner": {
+          "__rl": true,
+          "value": "LiuConnieXin",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n-Cross-environment",
+          "mode": "name"
+        },
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.githubTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "91aa6a1a-5abb-4346-9776-5f59bd5e3ee0",
+      "name": "Github Trigger",
+      "webhookId": "c01924dd-7e03-4641-823e-db4598643cd9",
+      "credentials": {
+        "githubApi": {
+          "id": "XnciNLL3uozLalpR",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "444bcc2b-12cc-4eb4-90cf-d396422ced1f",
+              "leftValue": "={{ $json.body.ref }}",
+              "rightValue": "refs/heads/main",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "ad9fb423-9504-40e8-97ad-681f3f9de2d7",
+              "leftValue": "={{ $json.action }}",
+              "rightValue": "opened",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        0
+      ],
+      "id": "9bd38675-9964-4575-89a0-dee165a11ea1",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "trigger",
+        "slug": "LiuConnieXin/n8n-Cross-environment",
+        "branch": "main",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.travisCi",
+      "typeVersion": 1,
+      "position": [
+        480,
+        -16
+      ],
+      "id": "f1b23427-8286-4e00-a1c9-32504b3cef9e",
+      "name": "Trigger a build",
+      "credentials": {
+        "travisCiApi": {
+          "id": "V4B3eCUuNPS1QgvU",
+          "name": "Travis account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Github Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Trigger a build",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "594c6d3b-2326-46b9-9cf4-ec7fe6e51c94",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "36e36c69d23803d1768383a6d597b8c66eee8182947956144655cc81b6e47c9b"
+  },
+  "nodeGroups": [],
+  "id": "7tcr9laDT1lISyGw",
+  "tags": []
+}
