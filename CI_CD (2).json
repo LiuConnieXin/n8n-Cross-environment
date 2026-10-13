@@ -1,0 +1,158 @@
+{
+  "name": "CI/CD",
+  "nodes": [
+    {
+      "parameters": {
+        "owner": {
+          "__rl": true,
+          "value": "LiuConnieXin",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n-Cross-environment",
+          "mode": "name"
+        },
+        "events": [
+          "push",
+          "pull_request"
+        ],
+        "options": {
+          "insecureSSL": false
+        }
+      },
+      "type": "n8n-nodes-base.githubTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4fa773f0-9974-43e3-9627-d966c1739703",
+      "name": "Github Trigger",
+      "webhookId": "f07a1f80-2216-43f7-aa18-a68d6fafbf08",
+      "retryOnFail": false,
+      "credentials": {
+        "githubApi": {
+          "id": "TuLrCgutnioF4uKG",
+          "name": "GitHub account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "8d8490b0-7726-49d5-8713-5dd7f4960244",
+              "leftValue": "={{ $json.body.action }}",
+              "rightValue": "opened",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "4c8acb9b-1911-46ba-917c-f6ad216509fe",
+              "leftValue": "={{ $json.body.action }}",
+              "rightValue": "synchronize",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "80ec7132-1a31-45e8-9e5f-3b546af090de",
+              "leftValue": "={{ $json.body.ref }}",
+              "rightValue": "refs/heads/main",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "6ce7bc38-56ae-4d39-96f3-19d33350eb7f",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "trigger",
+        "slug": "LiuConnieXin/n8n-Cross-environment",
+        "branch": "main",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.travisCi",
+      "typeVersion": 1,
+      "position": [
+        448,
+        -16
+      ],
+      "id": "461bbc28-28a8-4620-9067-543522073e1e",
+      "name": "Trigger a build",
+      "credentials": {
+        "travisCiApi": {
+          "id": "efeNXSlZACwuK0HB",
+          "name": "Travis account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Github Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Trigger a build",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "b9bfea1b-bdbf-492e-8fbe-cbe194fda8ff",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "62c6a022fa3d6bae96b6a563189972a862edfaa59040e993229930c62de261df"
+  },
+  "nodeGroups": [],
+  "id": "WYdwIPOFMiqKc9ny",
+  "tags": []
+}
